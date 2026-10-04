@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Quản lý mượn sách</title>
+
+    <link rel="stylesheet" href="../../static/css/borrow/borrows.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Quản lý mượn sách</h1>
+      </div>
+
+      <div class="filter-box">
+        <div class="search-row">
+          <div class="search-input-wrapper">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Tìm theo mã phiếu, mã độc giả"
+              oninput="toggleClearButton()"
+            />
+
+            <button
+              class="btn-clear"
+              id="clearSearchBtn"
+              onclick="clearSearch()"
+            >
+              ×
+            </button>
+          </div>
+
+          <button class="btn-search" onclick="searchBorrow()">Tìm kiếm</button>
+          <div class="filter-row">
+            <!-- Lọc trạng thái -->
+            <div class="status-filter">
+              <button class="active" onclick="filterStatus('BORROWING', this)">
+                Đang mượn
+              </button>
+
+              <button onclick="filterStatus('RETURNED', this)">Đã trả</button>
+
+              <button onclick="filterStatus('OVERDUE', this)">Quá hạn</button>
+            </div>
+          </div>
+          <button class="btn-add" onclick="addBorrow()">
+            + Tạo phiếu mượn
+          </button>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+
+              <th onclick="sortBorrow('borrowId')">
+                Mã phiếu
+                <span class="sort-icon" id="sort-borrowId">↕</span>
+              </th>
+
+              <th onclick="sortBorrow('readerId')">
+                Mã độc giả
+                <span class="sort-icon" id="sort-readerId">↕</span>
+              </th>
+
+              <th>Độc giả</th>
+
+              <th onclick="sortBorrow('borrowDate')">
+                Ngày mượn
+                <span class="sort-icon" id="sort-borrowDate">↕</span>
+              </th>
+
+              <th onclick="sortBorrow('dueDate')">
+                Hạn trả
+                <span class="sort-icon" id="sort-dueDate">↕</span>
+              </th>
+
+              <th>Ngày trả</th>
+
+              <th>Trạng thái</th>
+
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody id="borrowTable">
+            <tr>
+              <td>
+                <span class="status borrowing"> Đang mượn </span>
+              </td>
+
+              <td>
+                <button class="btn-return">Trả sách</button>
+
+                <button class="btn-detail">Chi tiết</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination"></div>
+      </div>
+    </div>
+
+    <div id="detailContainer" class="detail-container">
+      <div class="detail-box">
+        <div class="detail-header">
+          <h3>Chi tiết phiếu mượn</h3>
+          <button class="detail-close" onclick="closeDetail()">×</button>
+        </div>
+
+        <div id="viewDetail" class="detail-content"></div>
+      </div>
+    </div>
+    <div id="returnContainer" class="return-container">
+      <div class="return-box">
+        <div class="return-header">
+          <h3>Trả sách</h3>
+          <button onclick="closeReturn()">×</button>
+        </div>
+
+        <div id="returnContent"></div>
+
+        <div id="returnPayment"></div>
+
+        <div class="return-footer">
+          <button onclick="closeReturn()">Hủy</button>
+          <button id="confirmReturnBtn" onclick="confirmReturn()">
+            Xác nhận trả
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../static/js/borrow/borrows.js"></script>
+  </body>
+</html>

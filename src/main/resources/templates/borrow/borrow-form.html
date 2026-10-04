@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Tạo phiếu mượn</title>
+
+    <link rel="stylesheet" href="../../static/css/borrow/borrow-form.css" />
+  </head>
+
+  <body>
+    <div class="form-container">
+      <!-- HEADER -->
+      <div class="form-header">
+        <h1>Tạo phiếu mượn</h1>
+        <p>Nhập thông tin để tạo phiếu mượn sách</p>
+      </div>
+
+      <form id="borrowForm">
+        <!-- ========================= -->
+        <!-- PHẦN NỘI DUNG 2 CỘT -->
+        <!-- ========================= -->
+
+        <div class="borrow-content">
+          <!-- ========================= -->
+          <!-- BÊN TRÁI -->
+          <!-- ========================= -->
+
+          <div class="borrow-input">
+            <h2>Thông tin phiếu mượn</h2>
+
+            <!-- MÃ ĐỘC GIẢ -->
+            <div class="form-group">
+              <label for="readerId"> Mã độc giả </label>
+
+              <input
+                type="text"
+                id="readerId"
+                placeholder="Ví dụ: R001"
+                required
+              />
+            </div>
+
+            <hr />
+
+            <h2>Thêm sách</h2>
+
+            <!-- MÃ SÁCH -->
+            <div class="form-group">
+              <label for="bookId"> Mã sách </label>
+
+              <input type="text" id="bookId" placeholder="Ví dụ: B001" />
+            </div>
+
+            <!-- SỐ LƯỢNG -->
+            <div class="form-group">
+              <label for="quantity"> Số lượng </label>
+
+              <input type="number" id="quantity" min="1" value="1" />
+            </div>
+
+            <!-- THÊM SÁCH -->
+            <button type="button" class="btn-add" onclick="addBook()">
+              + Thêm sách
+            </button>
+          </div>
+
+          <!-- ========================= -->
+          <!-- BÊN PHẢI -->
+          <!-- ========================= -->
+
+          <div class="borrow-books">
+            <h2>Sách trong phiếu</h2>
+
+            <div id="bookList">
+              <div class="empty-message">Chưa có sách nào</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================= -->
+        <!-- BUTTON -->
+        <!-- ========================= -->
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" onclick="cancelForm()">
+            Hủy
+          </button>
+
+          <button type="submit" class="btn-submit">Tạo phiếu mượn</button>
+        </div>
+      </form>
+    </div>
+
+    <script src="../../static/js/borrow/borrow-form.js"></script>
+  </body>
+</html>
