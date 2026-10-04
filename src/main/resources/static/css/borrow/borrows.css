@@ -1,0 +1,875 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+.container {
+  width: 90%;
+  margin: 30px auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 28px;
+}
+
+/* =========================
+   FILTER
+========================= */
+
+.filter-box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 400px;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  box-sizing: border-box;
+}
+
+.search-input-wrapper input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* =========================
+   CLEAR SEARCH
+========================= */
+
+.btn-clear {
+  display: none;
+
+  position: absolute;
+  right: 8px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  background: none;
+  border: none;
+
+  font-size: 20px;
+  color: #888;
+
+  cursor: pointer;
+}
+
+.btn-clear:hover {
+  color: #333;
+}
+
+/* =========================
+   SEARCH BUTTON
+========================= */
+
+.btn-search {
+  background-color: #2563eb;
+  color: white;
+
+  border: none;
+
+  padding: 10px 20px;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.btn-search:hover {
+  background-color: #1d4ed8;
+}
+
+/* =========================
+   STATUS FILTER
+========================= */
+
+.filter-row {
+  display: flex;
+  align-items: center;
+}
+
+.status-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 3px;
+
+  background-color: #f1f5f9;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 7px;
+}
+
+.status-filter button {
+  padding: 8px 14px;
+
+  border: none;
+
+  background: transparent;
+
+  border-radius: 5px;
+
+  color: #475569;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.status-filter button:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.status-filter button.active {
+  background-color: #4457e3;
+
+  color: white;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   ADD BUTTON
+========================= */
+
+.btn-add {
+  margin-left: auto;
+
+  background-color: #2563eb;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.btn-add:hover {
+  background-color: #1d4ed8;
+}
+
+/* =========================
+   TABLE BOX
+========================= */
+
+.table-box {
+  background: white;
+
+  border-radius: 8px;
+
+  /* Có cả thanh cuộn dọc + ngang */
+  overflow: auto;
+
+  /* Chiều cao tối đa của bảng */
+  max-height: 600px;
+
+  position: relative;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+table {
+  width: 100%;
+
+  /* Giữ chiều rộng tối thiểu để không ép cột */
+  min-width: 1100px;
+
+  border-collapse: separate;
+
+  border-spacing: 0;
+}
+
+th,
+td {
+  padding: 14px;
+
+  text-align: center;
+
+  border-bottom: 1px solid #eee;
+
+  /* Không cho chữ làm thay đổi chiều rộng cột */
+  white-space: nowrap;
+}
+
+/* =========================
+   TABLE HEADER FIXED
+========================= */
+
+thead th {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 10;
+
+  background-color: #f8fafc;
+
+  box-shadow: 0 1px 0 #eee;
+}
+
+thead th[onclick] {
+  cursor: pointer;
+
+  user-select: none;
+}
+
+thead th[onclick]:hover {
+  background-color: #eef2ff;
+}
+
+/* =========================
+   SORT ICON
+========================= */
+
+.sort-icon {
+  display: inline-block;
+
+  margin-left: 6px;
+
+  font-size: 20px;
+
+  line-height: 1;
+
+  font-weight: bold;
+
+  color: #64748b;
+
+  vertical-align: middle;
+
+  transition: 0.2s;
+}
+
+.sort-icon.active {
+  color: #2563eb;
+
+  font-size: 21px;
+
+  font-weight: bold;
+}
+
+/* =========================
+   TABLE SCROLLBAR
+========================= */
+
+.table-box::-webkit-scrollbar {
+  width: 10px;
+
+  height: 10px;
+}
+
+.table-box::-webkit-scrollbar-thumb {
+  background: #aaa;
+
+  border-radius: 10px;
+}
+
+.table-box::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+.table-box::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+  display: inline-block;
+
+  padding: 5px 11px;
+
+  border-radius: 15px;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+.borrowing {
+  background-color: #dbeafe;
+
+  color: #1d4ed8;
+}
+
+.returned {
+  background-color: #dcfce7;
+
+  color: #15803d;
+}
+
+.overdue {
+  background-color: #fee2e2;
+
+  color: #dc2626;
+}
+
+/* =========================
+   ACTION BUTTON
+========================= */
+
+.btn-return {
+  background-color: #16a34a;
+
+  color: white;
+
+  border: none;
+
+  padding: 7px 12px;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.btn-return:hover {
+  background-color: #15803d;
+}
+
+.btn-detail {
+  background-color: #64748b;
+
+  color: white;
+
+  border: none;
+
+  padding: 7px 12px;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.btn-detail:hover {
+  background-color: #475569;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.pagination {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 20px;
+}
+
+.pagination button {
+  padding: 7px 12px;
+
+  border: 1px solid #ddd;
+
+  background: white;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #f1f5f9;
+}
+
+.pagination button.active {
+  background-color: #2563eb;
+
+  color: white;
+
+  border-color: #2563eb;
+}
+
+/* =========================
+   DETAIL POPUP
+========================= */
+
+.detail-container {
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.detail-container.show {
+  display: flex;
+}
+
+.detail-box {
+  width: 600px;
+
+  max-width: 90%;
+
+  background: white;
+
+  border-radius: 12px;
+
+  padding: 25px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.detail-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.detail-header h3 {
+  margin: 0;
+}
+
+.detail-close {
+  border: none;
+
+  background: none;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+  color: #555;
+}
+
+.detail-close:hover {
+  color: #000;
+}
+
+.detail-content {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.detail-row {
+  display: grid;
+
+  grid-template-columns: 180px 1fr;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.detail-label {
+  font-weight: bold;
+
+  color: #333;
+}
+
+.detail-value {
+  color: #555;
+
+  max-width: 400px;
+}
+
+.book-detail {
+  display: flex;
+
+  gap: 15px;
+
+  margin-bottom: 5px;
+}
+
+.book-list {
+  max-height: 150px;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  padding-right: 8px;
+}
+
+.book-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.book-list::-webkit-scrollbar-thumb {
+  background: #aaa;
+
+  border-radius: 10px;
+}
+
+.book-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* =========================
+   RETURN BOOK POPUP
+========================= */
+
+.return-container {
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.return-container.show {
+  display: flex;
+}
+
+.return-box {
+  width: 600px;
+
+  max-width: 90%;
+
+  max-height: 85vh;
+
+  background: white;
+
+  border-radius: 12px;
+
+  padding: 25px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+/* =========================
+   RETURN HEADER
+========================= */
+
+.return-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.return-header h3 {
+  margin: 0;
+}
+
+.return-header button {
+  border: none;
+
+  background: none;
+
+  font-size: 28px;
+
+  cursor: pointer;
+
+  color: #555;
+}
+
+.return-header button:hover {
+  color: #000;
+}
+
+/* =========================
+   RETURN CONTENT
+========================= */
+
+#returnContent {
+  padding: 0;
+
+  max-height: 55vh;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+}
+
+#returnContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+#returnContent::-webkit-scrollbar-thumb {
+  background: #aaa;
+
+  border-radius: 10px;
+}
+
+#returnContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* =========================
+   READER
+========================= */
+
+.return-reader {
+  margin-bottom: 15px;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid #eee;
+
+  color: #555;
+}
+
+.return-reader b {
+  color: #333;
+}
+
+/* =========================
+   BOOK
+========================= */
+
+.return-book {
+  padding: 15px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.return-book:first-child {
+  padding-top: 0;
+}
+
+.return-book-name {
+  font-weight: bold;
+
+  margin-bottom: 6px;
+
+  color: #333;
+}
+
+.return-book-quantity {
+  font-size: 14px;
+
+  margin-bottom: 12px;
+
+  color: #555;
+}
+
+/* =========================
+   RETURN INPUT
+========================= */
+
+.return-inputs {
+  display: flex;
+
+  gap: 15px;
+}
+
+.return-inputs div {
+  flex: 1;
+}
+
+.return-inputs label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 14px;
+
+  color: #555;
+}
+
+.return-inputs input {
+  width: 100%;
+
+  padding: 8px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 5px;
+
+  box-sizing: border-box;
+
+  color: #333;
+}
+
+.return-inputs input:focus {
+  outline: none;
+
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+/* =========================
+   PAYMENT
+========================= */
+
+#returnPayment {
+  padding: 0;
+
+  margin-top: 15px;
+}
+
+.payment-box {
+  padding: 15px;
+
+  background: #f8fafc;
+
+  border: 1px solid #eee;
+
+  border-radius: 8px;
+}
+
+.payment-title {
+  font-size: 18px;
+
+  font-weight: bold;
+
+  margin-bottom: 10px;
+
+  color: #333;
+}
+
+.payment-fee {
+  margin-bottom: 15px;
+
+  font-size: 15px;
+
+  color: #555;
+}
+
+.payment-fee strong {
+  color: #dc2626;
+
+  font-size: 18px;
+
+  margin-left: 5px;
+}
+
+.btn-pay {
+  background-color: #2563eb;
+
+  color: white;
+
+  border: none;
+
+  padding: 8px 16px;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.btn-pay:hover {
+  background-color: #1d4ed8;
+}
+
+/* =========================
+   RETURN FOOTER
+========================= */
+
+.return-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding-top: 20px;
+
+  margin-top: 10px;
+
+  border-top: 1px solid #eee;
+}
+
+.return-footer button {
+  padding: 8px 16px;
+
+  border: none;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.return-footer button:first-child {
+  background: #ddd;
+
+  color: #333;
+}
+
+.return-footer button:first-child:hover {
+  background: #ccc;
+}
+
+.return-footer button:last-child {
+  background: #2563eb;
+
+  color: white;
+}
+
+.return-footer button:last-child:hover {
+  background: #1d4ed8;
+}
+  
