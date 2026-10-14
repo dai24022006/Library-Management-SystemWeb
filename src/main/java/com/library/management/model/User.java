@@ -32,6 +32,16 @@ public class User {
     public User() {
     }
 
+    // 1. Constructor 4 tham số (mặc định trạng thái là APPROVED)
+    public User(String username, String password, String email, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.status = UserStatus.APPROVED;
+    }
+
+    // 2. Constructor đầy đủ 5 tham số
     public User(String username, String password, String email, Role role, UserStatus status) {
         this.username = username;
         this.password = password;
