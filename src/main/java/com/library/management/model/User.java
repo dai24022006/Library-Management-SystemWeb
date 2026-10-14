@@ -1,6 +1,7 @@
 package com.library.management.model;
 
 import com.library.management.enums.Role;
+import com.library.management.enums.UserStatus;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,7 +13,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
-    private String username; // ten tk
+    private String username;
 
     @Column(nullable = false, length = 255)
     private String password;
@@ -22,17 +23,21 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private Role role; // phan quyen
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UserStatus status = UserStatus.APPROVED;
 
     public User() {
     }
 
-    public User(String username, String password,
-            String email, Role role) {
+    public User(String username, String password, String email, Role role, UserStatus status) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.status = status;
     }
 
     public Long getId() {
@@ -69,5 +74,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 }
