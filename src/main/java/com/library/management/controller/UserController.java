@@ -20,21 +20,38 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 1. API lấy danh sách tất cả tài khoản: GET http://localhost:8080/api/users
+    // 1. Lấy tất cả người dùng trong hệ thống
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // 2. API Admin tạo tài khoản thủ thư mới: POST http://localhost:8080/api/users
+    // 2. Lấy danh sách các tài khoản độc giả đang chờ duyệt: GET /api/users/pending
+    @GetMapping("/pending")
+    public ResponseEntity<List<UserResponse>> getPendingUsers() {
+        return ResponseEntity.ok(userService.getPendingUsers());
+    }
+
+    // 3. Admin duyệt tài khoản: PUT /api/users/{id}/approve
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<UserResponse> approveUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.approveUser(id));
+    }
+
+    // 4. Admin từ chối duyệt tài khoản: PUT /api/users/{id}/reject
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<UserResponse> rejectUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.rejectUser(id));
+    }
+
+    // 5. Admin tạo tài khoản thủ thư mới
     @PostMapping
     public ResponseEntity<UserResponse> createLibrarian(@RequestBody RegisterRequest request) {
         UserResponse newUser = userService.createLibrarian(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    // 3. API xóa tài khoản thủ thư: DELETE http://localhost:8080/api/users/{id}
+    // 6. Xóa tài khoản theo ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
