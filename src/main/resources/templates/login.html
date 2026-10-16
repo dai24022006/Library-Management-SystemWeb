@@ -5,87 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - Hệ thống Quản lý Thư viện</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #f4f6f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .login-card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 420px;
-            padding: 35px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        }
-        .login-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .login-header h2 {
-            font-size: 24px;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-        .login-header p {
-            color: #64748b;
-            font-size: 14px;
-        }
-        .form-group {
-            margin-bottom: 18px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            font-size: 14px;
-            color: #334155;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .form-group input:focus {
-            border-color: #2563eb;
-        }
-        .alert-error {
-            display: none;
-            background-color: #fee2e2;
-            color: #b91c1c;
-            padding: 10px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 18px;
-            border: 1px solid #fecaca;
-        }
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background-color: #2563eb;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .btn-submit:hover {
-            background-color: #1d4ed8;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .login-card { background: #ffffff; width: 100%; max-width: 420px; padding: 35px 30px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+        .login-header { text-align: center; margin-bottom: 25px; }
+        .login-header h2 { font-size: 24px; color: #1e293b; margin-bottom: 8px; }
+        .login-header p { color: #64748b; font-size: 14px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 14px; color: #334155; }
+        .form-group input { width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; }
+        .form-group input:focus { border-color: #2563eb; }
+        .alert-error { display: none; background-color: #fee2e2; color: #b91c1c; padding: 12px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; border: 1px solid #fecaca; line-height: 1.4; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background-color: #1d4ed8; }
+        .footer-link { text-align: center; margin-top: 20px; font-size: 14px; color: #64748b; }
+        .footer-link a { color: #2563eb; text-decoration: none; font-weight: bold; }
+        .footer-link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -111,6 +46,10 @@
 
             <button type="submit" class="btn-submit" id="loginBtn">Đăng nhập</button>
         </form>
+
+        <div class="footer-link">
+            Chưa có tài khoản độc giả? <a href="register.html">Đăng ký tại đây</a>
+        </div>
     </div>
 
     <script>
@@ -131,9 +70,7 @@
             try {
                 const response = await fetch(API_LOGIN, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password })
                 });
 
@@ -144,17 +81,15 @@
 
                 const data = await response.json();
 
-                // 1. Lưu Token và thông tin User vào localStorage của trình duyệt
+                // Lưu Token và thông tin User
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("currentUser", JSON.stringify(data.user));
 
-                // 2. Điều hướng theo quyền (Role)
+                // Phân quyền điều hướng
                 if (data.user.role === "ADMIN") {
-                    alert(`Đăng nhập thành công với quyền ADMIN (${data.user.username})`);
-                    window.location.href = "borrow/borrows.html"; // hoặc dashboard.html
+                    window.location.href = "dashboard.html"; // Admin vào trang quản trị duyệt tài khoản
                 } else {
-                    alert(`Đăng nhập thành công với quyền THỦ THƯ (${data.user.username})`);
-                    window.location.href = "borrow/borrows.html";
+                    window.location.href = "borrow/borrows.html"; // Thủ thư hoặc Độc giả vào mượn sách
                 }
 
             } catch (error) {
