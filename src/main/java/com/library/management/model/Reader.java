@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.library.management.enums.Gender;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "readers")
@@ -14,9 +15,11 @@ public class Reader {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Mã độc giả không được để trống")
     @Column(name = "reader_id", nullable = false, unique = true, length = 50)
     private String readerId; // ma ng doc
 
+    @NotBlank(message = "Họ và tên không được để trống")
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName; // ten ng doc
 
