@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import com.library.management.enums.BookStatus;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "books")
@@ -14,12 +17,15 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(name = "book_id", nullable = false, unique = true, length = 50)
     private String bookId;// ma sach
 
+    @NotBlank
     @Column(nullable = false, length = 255)
     private String title; // ten sach
 
+    @NotBlank
     @Column(nullable = false, length = 255)
     private String author; // tac gia
 
@@ -32,12 +38,17 @@ public class Book {
     @Column(length = 100)
     private String category; // danh muc
 
+    @NotNull
+    @PositiveOrZero
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price; // gia
 
+    @NotNull
+    @PositiveOrZero
     @Column(nullable = false)
     private Integer quantity; // so luong
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private BookStatus status; // trang thai
