@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
 
                 // 3. Cả ADMIN và LIBRARIAN đều được thao tác với Sách, Độc giả và Mượn trả
-                .requestMatchers("/api/books/**", "/api/readers/**", "/api/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN")
+                .requestMatchers("/api/books/**", "/api/readers/**", "/api/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN", "READER")
 
                 // 4. Mọi yêu cầu còn lại đều phải có Token xác thực
                 .anyRequest().authenticated()
