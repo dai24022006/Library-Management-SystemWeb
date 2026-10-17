@@ -13,7 +13,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Optional<Book> findByIdAndDeletedFalse(Long id);
 
-    Optional<Book> findByBookId(String bookId);
+    Book findByBookId(String bookId);
 
     Optional<Book> findByBookIdAndDeletedFalse(String bookId);
 }
