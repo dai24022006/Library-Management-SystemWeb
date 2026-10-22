@@ -7,16 +7,18 @@ public class UserResponse {
     private String email;
     private String role;
     private String status;
+    private String readerId; // Mã thẻ độc giả tương ứng
 
     public UserResponse() {
     }
 
-    public UserResponse(Long id, String username, String email, String role, String status) {
+    public UserResponse(Long id, String username, String email, String role, String status, String readerId) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.role = role;
         this.status = status;
+        this.readerId = readerId;
     }
 
     public Long getId() {
@@ -57,5 +59,13 @@ public class UserResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getReaderId() {
+        return readerId;
+    }
+
+    public void setReaderId(String readerId) {
+        this.readerId = readerId;
     }
 }
