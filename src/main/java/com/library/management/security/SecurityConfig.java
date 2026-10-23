@@ -24,7 +24,11 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+@Bean
+    public org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer webSecurityCustomizer() {
+        // Tạm thời tắt toàn bộ Spring Security để test giao diện
+        return (web) -> web.ignoring().requestMatchers("/**");
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -36,20 +40,22 @@ public class SecurityConfig {
 
             // Thiết lập quy tắc cấp phép cho các đường dẫn
             .authorizeHttpRequests(auth -> auth
-                // 1. Cho phép truy cập công khai vào API đăng nhập và tài nguyên tĩnh (HTML, CSS, JS, ảnh)
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/", "/templates/**", "/static/**", "/css/**", "/js/**", "/images/**", "/*.html").permitAll()
+        // 1. Cho phép truy cập công khai vào API đăng nhập và tài nguyên tĩnh (HTML, CSS, JS, ảnh)
+        .requestMatchers("/api/auth/**").permitAll()
+        .requestMatchers("/", "/templates/**", "/static/**", "/css/**", "/js/**", "/images/**", "/*.html").permitAll()
 
-                // 2. Chỉ riêng ADMIN mới có quyền gọi API quản lý người dùng
-                .requestMatchers("/api/users/**").hasRole("ADMIN")
+        // ---> THÊM DÒNG NÀY ĐỂ MỞ KHÓA TRANG P5 CỦA BẠN:
+        .requestMatchers("/admin/dashboard").permitAll()
 
-                // 3. Cả ADMIN và LIBRARIAN đều được thao tác với Sách, Độc giả và Mượn trả
-                .requestMatchers("/api/books/**", "/api/readers/**", "/api/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN")
+        // 2. Chỉ riêng ADMIN mới có quyền gọi API quản lý người dùng
+        .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                // 4. Mọi yêu cầu còn lại đều phải có Token xác thực
-                .anyRequest().authenticated()
-            )
+        // 3. Cả ADMIN và LIBRARIAN đều được thao tác với Sách, Độc giả và Mượn trả
+        .requestMatchers("/api/books/**", "/api/readers/**", "/api/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN")
 
+        // 4. Mọi yêu cầu còn lại đều phải có Token xác thực
+        .anyRequest().authenticated()
+    )
             // Gắn bộ lọc kiểm tra JWT vào trước bộ lọc mặc định của Spring
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
