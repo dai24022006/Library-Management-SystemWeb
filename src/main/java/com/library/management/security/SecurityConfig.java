@@ -2,6 +2,7 @@ package com.library.management.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -9,6 +10,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -24,22 +30,37 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-@Bean
-    public org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer webSecurityCustomizer() {
-        // Tạm thời tắt toàn bộ Spring Security để test giao diện
-        return (web) -> web.ignoring().requestMatchers("/**");
+
+
+    // Cấu hình CORS cho phép mọi nguồn và phương thức truy cập API
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Tắt CSRF vì ứng dụng dùng kiến trúc REST API + JWT
+            // 1. Kích hoạt CORS với cấu hình ở trên
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+            // 2. Tắt CSRF vì dùng REST API + JWT
             .csrf(csrf -> csrf.disable())
 
-            // Cấu hình Session không lưu trạng thái (Stateless)
+            // 3. Cấu hình Session không lưu trạng thái (Stateless)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // Thiết lập quy tắc cấp phép cho các đường dẫn
+            // 4. Thiết lập quy tắc phân quyền
             .authorizeHttpRequests(auth -> auth
+
         // 1. Cho phép truy cập công khai vào API đăng nhập và tài nguyên tĩnh (HTML, CSS, JS, ảnh)
         .requestMatchers("/api/auth/**").permitAll()
         .requestMatchers("/", "/templates/**", "/static/**", "/css/**", "/js/**", "/images/**", "/*.html").permitAll()
@@ -57,6 +78,26 @@ public class SecurityConfig {
         .anyRequest().authenticated()
     )
             // Gắn bộ lọc kiểm tra JWT vào trước bộ lọc mặc định của Spring
+
+                // Cho phép toàn bộ các yêu cầu kiểm tra CORS (OPTIONS) đi qua
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Cho phép truy cập công khai vào API đăng nhập, đăng ký và tài nguyên tĩnh
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/", "/templates/**", "/static/**", "/css/**", "/js/**", "/images/**", "/*.html").permitAll()
+
+                // Chỉ riêng ADMIN mới có quyền gọi API quản lý người dùng
+                .requestMatchers("/api/users/**").hasRole("ADMIN")
+
+                // Cả ADMIN, LIBRARIAN và READER đều được thao tác với Sách, Độc giả và Mượn trả
+                .requestMatchers("/api/books/**", "/api/readers/**", "/api/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN", "READER")
+
+                // Mọi yêu cầu còn lại đều phải có Token xác thực
+                .anyRequest().authenticated()
+            )
+
+            // Gắn bộ lọc kiểm tra JWT
+
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

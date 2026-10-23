@@ -1,5 +1,29 @@
 const API_URL = "http://localhost:8080/api/borrows";
 
+// ========================================================
+// TỰ ĐỘNG GẮN JWT TOKEN VÀO TẤT CẢ CÁC REQUEST FETCH
+// ========================================================
+const originalFetch = window.fetch;
+window.fetch = async function(url, options = {}) {
+    const token = localStorage.getItem("token");
+    if (token) {
+        options.headers = {
+            ...options.headers,
+            "Authorization": `Bearer ${token}`
+        };
+    }
+    const response = await originalFetch(url, options);
+    
+    // Nếu hết hạn phiên đăng nhập hoặc bị từ chối quyền
+    if (response.status === 401 || response.status === 403) {
+        alert("Phiên đăng nhập đã hết hạn hoặc bạn không có quyền! Vui lòng đăng nhập lại.");
+        localStorage.clear();
+        window.location.href = "../login.html";
+    }
+    return response;
+};
+// ========================================================
+
 let currentStatus = "BORROWING";
 let currentSort = "";
 let currentBorrowId = null;
