@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Tasks for the Java 25 LTS runtime upgrade plan.",
+  "tasks": [
+    {
+      "type": "upgrade",
+      "id": "001-upgrade-java-version",
+      "description": "Upgrade Java from version 21 to Java 25 LTS. Addresses assessment issue: Java Version is not the latest LTS (azure-java-version-02000).",
+      "reason": "The assessment identifies Java 21 as older than the latest LTS version, and the user selected Java 25 LTS.",
+      "requirements": "Upgrade the application's Java runtime and build target from Java 21 to Java 25 LTS. Preserve current application behavior and avoid upgrading Spring Boot or changing cloud-readiness, credential/security, containerization, or database scope. Verify that the project builds and existing unit tests pass with Java 25.",
+      "successCriteria": {
+        "passBuild": "true",
+        "generateNewUnitTests": "false",
+        "passUnitTests": "true"
+      }
+    }
+  ],
+  "metadata": {
+    "planName": "java-25-runtime-upgrade",
+    "projectName": "management",
+    "language": "java",
+    "createdAt": "2026-10-23T13:58:46+07:00",
+    "version": "1.0"
+  }
+}

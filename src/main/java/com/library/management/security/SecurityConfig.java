@@ -31,6 +31,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     // Cấu hình CORS cho phép mọi nguồn và phương thức truy cập API
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -43,6 +44,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -58,6 +60,25 @@ public class SecurityConfig {
 
             // 4. Thiết lập quy tắc phân quyền
             .authorizeHttpRequests(auth -> auth
+
+        // 1. Cho phép truy cập công khai vào API đăng nhập và tài nguyên tĩnh (HTML, CSS, JS, ảnh)
+        .requestMatchers("/api/auth/**").permitAll()
+        .requestMatchers("/", "/templates/**", "/static/**", "/css/**", "/js/**", "/images/**", "/*.html").permitAll()
+
+        // ---> THÊM DÒNG NÀY ĐỂ MỞ KHÓA TRANG P5 CỦA BẠN:
+        .requestMatchers("/admin/dashboard").permitAll()
+
+        // 2. Chỉ riêng ADMIN mới có quyền gọi API quản lý người dùng
+        .requestMatchers("/api/users/**").hasRole("ADMIN")
+
+        // 3. Cả ADMIN và LIBRARIAN đều được thao tác với Sách, Độc giả và Mượn trả
+        .requestMatchers("/api/books/**", "/api/readers/**", "/api/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN")
+
+        // 4. Mọi yêu cầu còn lại đều phải có Token xác thực
+        .anyRequest().authenticated()
+    )
+            // Gắn bộ lọc kiểm tra JWT vào trước bộ lọc mặc định của Spring
+
                 // Cho phép toàn bộ các yêu cầu kiểm tra CORS (OPTIONS) đi qua
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
@@ -76,6 +97,7 @@ public class SecurityConfig {
             )
 
             // Gắn bộ lọc kiểm tra JWT
+
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
