@@ -85,11 +85,16 @@
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("currentUser", JSON.stringify(data.user));
 
-                // Phân quyền điều hướng
+                // Phân quyền điều hướng cho 3 vai trò
                 if (data.user.role === "ADMIN") {
-                    window.location.href = "dashboard.html"; // Admin vào trang quản trị duyệt tài khoản
-                } else {
-                    window.location.href = "borrow/borrows.html"; // Thủ thư hoặc Độc giả vào mượn sách
+                    alert(`Đăng nhập thành công với quyền QUẢN TRỊ VIÊN (${data.user.username})`);
+                    window.location.href = "dashboard.html";
+                } else if (data.user.role === "LIBRARIAN") {
+                    alert(`Đăng nhập thành công với quyền THỦ THƯ (${data.user.username})`);
+                    window.location.href = "borrow/borrows.html";
+                } else if (data.user.role === "READER") {
+                    alert(`Đăng nhập thành công! Chào mừng độc giả ${data.user.username}`);
+                    window.location.href = "reader-home.html";
                 }
 
             } catch (error) {
