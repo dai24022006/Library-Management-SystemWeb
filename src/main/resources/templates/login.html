@@ -18,9 +18,14 @@
         .alert-error { display: none; background-color: #fee2e2; color: #b91c1c; padding: 12px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; border: 1px solid #fecaca; line-height: 1.4; }
         .btn-submit { width: 100%; padding: 12px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
         .btn-submit:hover { background-color: #1d4ed8; }
-        .footer-link { text-align: center; margin-top: 20px; font-size: 14px; color: #64748b; }
-        .footer-link a { color: #2563eb; text-decoration: none; font-weight: bold; }
-        .footer-link a:hover { text-decoration: underline; }
+        
+        .divider { display: flex; align-items: center; text-align: center; margin: 20px 0; color: #94a3b8; font-size: 13px; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
+        .divider::before { margin-right: 10px; }
+        .divider::after { margin-left: 10px; }
+
+        .btn-register-reader { width: 100%; padding: 11px; background-color: #10b981; color: #ffffff; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; }
+        .btn-register-reader:hover { background-color: #059669; }
     </style>
 </head>
 <body>
@@ -28,7 +33,7 @@
     <div class="login-card">
         <div class="login-header">
             <h2>Quản Lý Thư Viện</h2>
-            <p>Đăng nhập hệ thống để tiếp tục</p>
+            <p>Đăng nhập để vào hệ thống</p>
         </div>
 
         <div id="errorAlert" class="alert-error"></div>
@@ -47,9 +52,10 @@
             <button type="submit" class="btn-submit" id="loginBtn">Đăng nhập</button>
         </form>
 
-        <div class="footer-link">
-            Chưa có tài khoản độc giả? <a href="register.html">Đăng ký tại đây</a>
-        </div>
+        <div class="divider">HOẶC DÀNH CHO BẠN ĐỌC</div>
+
+        <!-- NÚT TẠO TÀI KHOẢN CHO ĐỘC GIẢ -->
+        <a href="register.html" class="btn-register-reader">➕ Tạo tài khoản Độc giả mới</a>
     </div>
 
     <script>
