@@ -10,13 +10,25 @@
         .navbar { background: #1e293b; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
         .navbar h1 { font-size: 20px; }
         .user-info { display: flex; align-items: center; gap: 15px; }
-        .btn-logout { background: #ef4444; color: white; border: none; padding: 7px 14px; border-radius: 5px; cursor: pointer; font-size: 13px; }
+        .btn-back-login { background: #475569; color: white; border: none; padding: 7px 14px; border-radius: 5px; cursor: pointer; font-size: 13px; text-decoration: none; }
+        .btn-back-login:hover { background: #334155; }
+        .btn-logout { background: #ef4444; color: white; border: none; padding: 7px 14px; border-radius: 5px; cursor: pointer; font-size: 13px; font-weight: bold; }
         .btn-logout:hover { background: #dc2626; }
+        
         .container { width: 92%; max-width: 1200px; margin: 30px auto; }
         .card { background: white; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
         .card-title { font-size: 18px; font-weight: bold; color: #0f172a; }
         .badge-count { background: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 6px; }
+
+        /* Form tạo Thủ thư */
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 15px; align-items: flex-end; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #334155; }
+        .form-group input { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; }
+        .form-group input:focus { border-color: #2563eb; }
+        .btn-create-librarian { background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; height: 42px; }
+        .btn-create-librarian:hover { background: #1d4ed8; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
         th { background: #f8fafc; color: #475569; font-weight: bold; }
@@ -33,7 +45,7 @@
         .btn-delete:hover { background: #dc2626; }
         .empty-text { text-align: center; color: #94a3b8; padding: 20px; font-style: italic; }
         .nav-links { margin-bottom: 20px; display: flex; gap: 10px; }
-        .nav-btn { background: #3b82f6; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; }
+        .nav-btn { background: #3b82f6; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; font-weight: bold; }
         .nav-btn:hover { background: #2563eb; }
     </style>
 </head>
@@ -43,20 +55,45 @@
         <h1>Quản Trị Hệ Thống Thư Viện</h1>
         <div class="user-info">
             <span id="adminGreeting">Xin chào, Admin</span>
-            <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+            <!-- NÚT QUAY LẠI / ĐĂNG XUẤT -->
+            <button class="btn-logout" onclick="logout()">← Đăng xuất / Quay lại</button>
         </div>
     </div>
 
     <div class="container">
         <div class="nav-links">
-            <a href="borrow/borrows.html" class="nav-btn">➔ Trang Quản lý Mượn Sách</a>
+            <a href="borrow/borrows.html" class="nav-btn">➔ Đến Trang Quản lý Mượn Sách</a>
         </div>
 
-        <!-- BẢNG 1: DANH SÁCH ĐỘC GIẢ CHỜ DUYỆT -->
+        <!-- CARD 1: FORM DÀNH CHO ADMIN TẠO TÀI KHOẢN THỦ THƯ -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">➕ Cấp Tài Khoản Mới Cho Thủ Thư</div>
+            </div>
+            <form onsubmit="handleCreateLibrarian(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tên đăng nhập Thủ thư</label>
+                        <input type="text" id="libUsername" required placeholder="Ví dụ: thuthu2">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="libEmail" required placeholder="Ví dụ: thuthu2@library.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu khởi tạo</label>
+                        <input type="password" id="libPassword" required placeholder="Nhập mật khẩu">
+                    </div>
+                    <button type="submit" class="btn-create-librarian">+ Cấp tài khoản</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CARD 2: BẢNG ĐỘC GIẢ CHỜ DUYỆT -->
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    Độc Giả Chờ Duyệt Tài Khoản
+                    📋 Độc Giả Chờ Duyệt Tài Khoản
                     <span id="pendingCount" class="badge-count">0</span>
                 </div>
             </div>
@@ -77,10 +114,10 @@
             </table>
         </div>
 
-        <!-- BẢNG 2: TẤT CẢ NGƯỜI DÙNG -->
+        <!-- CARD 3: BẢNG TẤT CẢ NGƯỜI DÙNG TRONG HỆ THỐNG -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Tất Cả Tài Khoản Trong Hệ Thống</div>
+                <div class="card-title">👥 Tất Cả Tài Khoản Trong Hệ Thống</div>
             </div>
             <table>
                 <thead>
@@ -105,7 +142,6 @@
         const token = localStorage.getItem("token");
         const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
-        // 1. Kiểm tra quyền bảo mật ở Client: Chỉ ADMIN mới được vào trang này
         if (!token || currentUser.role !== "ADMIN") {
             alert("Bạn không có quyền truy cập trang quản trị này!");
             window.location.href = "login.html";
@@ -117,6 +153,38 @@
             loadPendingUsers();
             loadAllUsers();
         });
+
+        // 1. Admin bấm tạo tài khoản Thủ thư mới
+        async function handleCreateLibrarian(event) {
+            event.preventDefault();
+            const username = document.getElementById("libUsername").value.trim();
+            const email = document.getElementById("libEmail").value.trim();
+            const password = document.getElementById("libPassword").value;
+
+            try {
+                const res = await fetch(API_USERS, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => null);
+                    throw new Error(err?.message || "Không thể cấp tài khoản thủ thư!");
+                }
+
+                alert(`Đã cấp tài khoản Thủ thư (${username}) thành công!`);
+                document.getElementById("libUsername").value = "";
+                document.getElementById("libEmail").value = "";
+                document.getElementById("libPassword").value = "";
+                loadAllUsers();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
 
         // 2. Tải danh sách độc giả chờ duyệt
         async function loadPendingUsers() {
@@ -155,7 +223,7 @@
             `).join("");
         }
 
-        // 3. Tải danh sách tất cả tài khoản
+        // 3. Tải tất cả tài khoản
         async function loadAllUsers() {
             try {
                 const response = await fetch(API_USERS, {
@@ -181,7 +249,7 @@
                         <td>${u.id}</td>
                         <td><strong>${u.username}</strong></td>
                         <td>${u.email}</td>
-                        <td>${u.role}</td>
+                        <td><strong>${u.role}</strong></td>
                         <td><span class="badge ${badgeClass}">${statusText}</span></td>
                         <td>
                             ${u.role !== 'ADMIN' ? `<button class="btn-action btn-delete" onclick="deleteUser(${u.id})">Xóa</button>` : '<em>Mặc định</em>'}
@@ -191,7 +259,6 @@
             }).join("");
         }
 
-        // 4. Các hàm gọi API Duyệt / Từ chối / Xóa
         async function approveUser(id) {
             if (!confirm("Bạn có chắc chắn muốn DUYỆT tài khoản này?")) return;
             const res = await fetch(`${API_USERS}/${id}/approve`, {
