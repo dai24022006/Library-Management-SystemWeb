@@ -47,31 +47,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 1. Kích hoạt CORS với cấu hình ở trên
+            // 1. Kích hoạt CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
             // 2. Tắt CSRF vì dùng REST API + JWT
             .csrf(csrf -> csrf.disable())
 
-            // 3. Cấu hình Session không lưu trạng thái (Stateless)
+            // 3. Cấu hình Session Stateless
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // 4. Thiết lập quy tắc phân quyền
+            // 4. Phân quyền truy cập
             .authorizeHttpRequests(auth -> auth
-                // Cho phép toàn bộ các yêu cầu kiểm tra CORS (OPTIONS) đi qua
+                // Cho phép các yêu cầu CORS OPTIONS đi qua
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Cho phép truy cập công khai vào API đăng nhập, đăng ký và tài nguyên tĩnh
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/", "/templates/**", "/static/**", "/css/**", "/js/**", "/images/**", "/*.html").permitAll()
+                .requestMatchers("/", "/static/**", "/css/**", "/js/**", "/images/**", "/*.html", "/admin/dashboard").permitAll()
 
                 // Chỉ riêng ADMIN mới có quyền gọi API quản lý người dùng
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                // Cả ADMIN, LIBRARIAN và READER đều được thao tác với Sách, Độc giả và Mượn trả
+                // ADMIN, LIBRARIAN và READER đều được thao tác với Sách, Độc giả và Mượn trả
                 .requestMatchers("/api/books/**", "/api/readers/**", "/api/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN", "READER")
 
-                // Mọi yêu cầu còn lại đều phải có Token xác thực
+                // Mọi yêu cầu còn lại đều cần Token xác thực
                 .anyRequest().authenticated()
             )
 
