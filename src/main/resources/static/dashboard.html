@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Đã thêm xmlns:th để Spring Boot nhận diện cú pháp Thymeleaf -->
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -11,21 +10,30 @@
         .navbar { background: #1e293b; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
         .navbar h1 { font-size: 20px; }
         .user-info { display: flex; align-items: center; gap: 15px; }
-        .btn-logout { background: #ef4444; color: white; border: none; padding: 7px 14px; border-radius: 5px; cursor: pointer; font-size: 13px; }
+        .btn-logout { background: #ef4444; color: white; border: none; padding: 7px 14px; border-radius: 5px; cursor: pointer; font-size: 13px; font-weight: bold; }
         .btn-logout:hover { background: #dc2626; }
+        
         .container { width: 92%; max-width: 1200px; margin: 30px auto; }
         
-        /* CSS MỚI CHO PHẦN THỐNG KÊ (P5) */
+        /* PHẦN THỐNG KÊ (NHÓM) */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; border-top: 4px solid #3b82f6; }
         .stat-card h3 { font-size: 15px; color: #64748b; margin-bottom: 12px; text-transform: uppercase; font-weight: bold; }
         .stat-card h1 { font-size: 36px; color: #0f172a; margin: 0; }
-        
-        /* CSS CŨ CỦA BẢNG USER (P1) */
+
+        /* FORM CẤP TÀI KHOẢN VÀ BẢNG */
         .card { background: white; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
         .card-title { font-size: 18px; font-weight: bold; color: #0f172a; }
         .badge-count { background: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 6px; }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 15px; align-items: flex-end; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #334155; }
+        .form-group input { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; }
+        .form-group input:focus { border-color: #2563eb; }
+        .btn-create-librarian { background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; height: 42px; }
+        .btn-create-librarian:hover { background: #1d4ed8; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
         th { background: #f8fafc; color: #475569; font-weight: bold; }
@@ -42,7 +50,7 @@
         .btn-delete:hover { background: #dc2626; }
         .empty-text { text-align: center; color: #94a3b8; padding: 20px; font-style: italic; }
         .nav-links { margin-bottom: 20px; display: flex; gap: 10px; }
-        .nav-btn { background: #3b82f6; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; }
+        .nav-btn { background: #3b82f6; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; font-weight: bold; }
         .nav-btn:hover { background: #2563eb; }
     </style>
 </head>
@@ -52,44 +60,64 @@
         <h1>Quản Trị Hệ Thống Thư Viện</h1>
         <div class="user-info">
             <span id="adminGreeting">Xin chào, Admin</span>
-            <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+            <button class="btn-logout" onclick="logout()">← Đăng xuất / Quay lại</button>
         </div>
     </div>
 
     <div class="container">
         <div class="nav-links">
-            <a href="borrow/borrows.html" class="nav-btn">➔ Trang Quản lý Mượn Sách</a>
+            <a href="borrow/borrows.html" class="nav-btn">➔ Đến Trang Quản lý Mượn Sách</a>
         </div>
 
-        <!-- ========================================== -->
-        <!-- PHẦN 5: DASHBOARD THỐNG KÊ (DÙNG THYMELEAF) -->
-        <!-- ========================================== -->
+        <!-- THỐNG KÊ TỔNG QUAN -->
         <div class="stats-grid">
             <div class="stat-card" style="border-top-color: #3b82f6;">
                 <h3>Tổng số Sách</h3>
-                <!-- Dùng th:text để Java tự động điền số vào đây -->
-                <h1 th:text="${stats.totalBooks}">0</h1>
+                <h1 th:text="${stats?.totalBooks}">0</h1>
             </div>
             <div class="stat-card" style="border-top-color: #10b981;">
                 <h3>Tổng số Độc giả</h3>
-                <h1 th:text="${stats.totalReaders}">0</h1>
+                <h1 th:text="${stats?.totalReaders}">0</h1>
             </div>
             <div class="stat-card" style="border-top-color: #f59e0b;">
                 <h3>Tổng số Tài khoản</h3>
-                <h1 th:text="${stats.totalUsers}">0</h1>
+                <h1 th:text="${stats?.totalUsers}">0</h1>
             </div>
             <div class="stat-card" style="border-top-color: #ef4444;">
                 <h3>Tổng số Phiếu mượn</h3>
-                <h1 th:text="${stats.totalBorrows}">0</h1>
+                <h1 th:text="${stats?.totalBorrows}">0</h1>
             </div>
         </div>
-        <!-- ========================================== -->
 
-        <!-- BẢNG 1: DANH SÁCH ĐỘC GIẢ CHỜ DUYỆT (Giữ nguyên của P1) -->
+        <!-- CARD 1: FORM CẤP TÀI KHOẢN CHO THỦ THƯ -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">➕ Cấp Tài Khoản Mới Cho Thủ Thư</div>
+            </div>
+            <form onsubmit="handleCreateLibrarian(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tên đăng nhập Thủ thư</label>
+                        <input type="text" id="libUsername" required placeholder="Ví dụ: thuthu2">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="libEmail" required placeholder="Ví dụ: thuthu2@library.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu khởi tạo</label>
+                        <input type="password" id="libPassword" required placeholder="Nhập mật khẩu">
+                    </div>
+                    <button type="submit" class="btn-create-librarian">+ Cấp tài khoản</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CARD 2: BẢNG ĐỘC GIẢ CHỜ DUYỆT -->
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    Độc Giả Chờ Duyệt Tài Khoản
+                    📋 Độc Giả Chờ Duyệt Tài Khoản
                     <span id="pendingCount" class="badge-count">0</span>
                 </div>
             </div>
@@ -110,10 +138,10 @@
             </table>
         </div>
 
-        <!-- BẢNG 2: TẤT CẢ NGƯỜI DÙNG (Giữ nguyên của P1) -->
+        <!-- CARD 3: BẢNG TẤT CẢ TÀI KHOẢN -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Tất Cả Tài Khoản Trong Hệ Thống</div>
+                <div class="card-title">👥 Tất Cả Tài Khoản Trong Hệ Thống</div>
             </div>
             <table>
                 <thead>
@@ -133,7 +161,6 @@
         </div>
     </div>
 
-    <!-- Giữ nguyên toàn bộ JS xử lý API của P1 -->
     <script>
         const API_USERS = "http://localhost:8080/api/users";
         const token = localStorage.getItem("token");
@@ -150,6 +177,37 @@
             loadPendingUsers();
             loadAllUsers();
         });
+
+        async function handleCreateLibrarian(event) {
+            event.preventDefault();
+            const username = document.getElementById("libUsername").value.trim();
+            const email = document.getElementById("libEmail").value.trim();
+            const password = document.getElementById("libPassword").value;
+
+            try {
+                const res = await fetch(API_USERS, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => null);
+                    throw new Error(err?.message || "Không thể cấp tài khoản thủ thư!");
+                }
+
+                alert(`Đã cấp tài khoản Thủ thư (${username}) thành công!`);
+                document.getElementById("libUsername").value = "";
+                document.getElementById("libEmail").value = "";
+                document.getElementById("libPassword").value = "";
+                loadAllUsers();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
 
         async function loadPendingUsers() {
             try {
@@ -212,7 +270,7 @@
                         <td>${u.id}</td>
                         <td><strong>${u.username}</strong></td>
                         <td>${u.email}</td>
-                        <td>${u.role}</td>
+                        <td><strong>${u.role}</strong></td>
                         <td><span class="badge ${badgeClass}">${statusText}</span></td>
                         <td>
                             ${u.role !== 'ADMIN' ? `<button class="btn-action btn-delete" onclick="deleteUser(${u.id})">Xóa</button>` : '<em>Mặc định</em>'}

@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký tài khoản - Hệ thống Thư viện</title>
+    <title>Đăng ký Độc giả - Quản Lý Thư Viện</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .card { background: #ffffff; width: 100%; max-width: 440px; padding: 35px 30px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+        body { background-color: #f4f6f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: #ffffff; width: 100%; max-width: 440px; padding: 35px 30px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); position: relative; }
+        .btn-back { display: inline-flex; align-items: center; gap: 5px; color: #64748b; text-decoration: none; font-size: 14px; font-weight: bold; margin-bottom: 20px; }
+        .btn-back:hover { color: #2563eb; }
         .header { text-align: center; margin-bottom: 25px; }
         .header h2 { font-size: 24px; color: #1e293b; margin-bottom: 8px; }
         .header p { color: #64748b; font-size: 14px; }
@@ -18,16 +20,16 @@
         .alert { display: none; padding: 12px 14px; border-radius: 6px; font-size: 14px; margin-bottom: 18px; line-height: 1.5; }
         .alert-error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
         .alert-success { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-        .btn-submit { width: 100%; padding: 12px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
-        .btn-submit:hover { background-color: #1d4ed8; }
-        .footer-link { text-align: center; margin-top: 20px; font-size: 14px; color: #64748b; }
-        .footer-link a { color: #2563eb; text-decoration: none; font-weight: bold; }
-        .footer-link a:hover { text-decoration: underline; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #10b981; color: #ffffff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background-color: #059669; }
     </style>
 </head>
 <body>
 
     <div class="card">
+        <!-- NÚT QUAY LẠI -->
+        <a href="login.html" class="btn-back">← Quay lại Đăng nhập</a>
+
         <div class="header">
             <h2>Đăng Ký Độc Giả</h2>
             <p>Tạo tài khoản để đăng ký mượn sách thư viện</p>
@@ -57,16 +59,12 @@
                 <input type="password" id="confirmPassword" required placeholder="Nhập lại mật khẩu">
             </div>
 
-            <button type="submit" class="btn-submit" id="submitBtn">Đăng ký tài khoản</button>
+            <button type="submit" class="btn-submit" id="submitBtn">Xác nhận Đăng ký</button>
         </form>
-
-        <div class="footer-link">
-            Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a>
-        </div>
     </div>
 
     <script>
-        const API_REGISTER = "http://localhost:8081/api/auth/register";
+        const API_REGISTER = "http://localhost:8080/api/auth/register";
 
         async function handleRegister(event) {
             event.preventDefault();
@@ -105,14 +103,14 @@
                 }
 
                 document.getElementById("registerForm").reset();
-                successAlert.innerHTML = `<strong>Đăng ký thành công!</strong><br>Tài khoản của bạn đang ở trạng thái <strong>CHỜ DUYỆT</strong>. Vui lòng đợi Quản trị viên duyệt để có thể đăng nhập.`;
+                successAlert.innerHTML = `<strong>Đăng ký thành công!</strong><br>Tài khoản đang chờ Quản trị viên duyệt. Sau khi duyệt, bạn có thể đăng nhập ngay.`;
                 successAlert.style.display = "block";
 
             } catch (error) {
                 errorAlert.innerText = error.message;
                 errorAlert.style.display = "block";
             } finally {
-                submitBtn.innerText = "Đăng ký tài khoản";
+                submitBtn.innerText = "Xác nhận Đăng ký";
                 submitBtn.disabled = false;
             }
         }
