@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Library Management</title>
+
+    <link rel="stylesheet" href="/css/admin/dashboard.css" />
+    <script src="/js/admin/dashboard.js" defer></script>
+    <script src="/js/admin/book.js" defer></script>
+    <script src="/js/admin/reader.js" defer></script>
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="/images/logo.jpg" alt="Logo" />
+          <span>LIBRARY MANAGEMENT</span>
+        </div>
+
+        <div class="sidebar-label">QUẢN TRỊ HỆ THỐNG</div>
+
+        <nav class="nav">
+          <button type="button" class="nav-item active" data-tab="overview">
+            <span>▦</span>
+            <span>Tổng quan</span>
+          </button>
+
+          <button type="button" class="nav-item" data-tab="books">
+            <span>▤</span>
+            <span>Quản lý sách</span>
+          </button>
+
+          <button type="button" class="nav-item" data-tab="readers">
+            <span>♙</span>
+            <span>Quản lý độc giả</span>
+          </button>
+
+          <button type="button" class="nav-item" data-tab="librarians">
+            <span>♧</span>
+            <span>Quản lý thủ thư</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <form action="/logout" method="post">
+            <button type="submit" class="logout-btn">Đăng xuất</button>
+          </form>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- HEADER -->
+        <header class="topbar">
+          <div>
+            <span class="breadcrumb">
+              Quản trị /
+              <span id="breadcrumb">Tổng quan</span>
+            </span>
+
+            <h1 id="pageTitle">Tổng quan hệ thống</h1>
+
+            <p id="pageDescription">Theo dõi và quản lý hoạt động thư viện.</p>
+          </div>
+
+          <div class="profile">
+            <div class="avatar">A</div>
+
+            <div>
+              <strong id="adminUsername">Admin</strong>
+              <small>Quản trị viên</small>
+            </div>
+          </div>
+        </header>
+
+        <div id="notification" class="notification" role="alert"></div>
+
+        <!-- ===================== -->
+        <!-- TỔNG QUAN -->
+        <!-- ===================== -->
+
+        <section id="overview" class="tab-section active">
+          <div class="stats">
+            <article class="stat-card">
+              <div class="stat-icon blue">▤</div>
+              <span>Tổng số sách</span>
+              <strong id="totalBooks">--</strong>
+              <small>Đầu sách trong thư viện</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-icon green">♙</div>
+              <span>Tổng độc giả</span>
+              <strong id="totalReaders">--</strong>
+              <small>Độc giả đã đăng ký</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-icon purple">♧</div>
+              <span>Tổng thủ thư</span>
+              <strong id="totalLibrarians">--</strong>
+              <small>Tài khoản thủ thư</small>
+            </article>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Quản lý hệ thống</h2>
+                <p>Chọn chức năng muốn thực hiện</p>
+              </div>
+            </div>
+
+            <div class="quick-actions">
+              <button type="button" class="quick-action" data-tab="books">
+                <span class="quick-icon blue">▤</span>
+                <strong>Quản lý sách</strong>
+                <small>Thêm, sửa, xóa sách</small>
+              </button>
+
+              <button type="button" class="quick-action" data-tab="readers">
+                <span class="quick-icon green">♙</span>
+                <strong>Quản lý độc giả</strong>
+                <small>Thêm, sửa, xóa độc giả</small>
+              </button>
+
+              <button type="button" class="quick-action" data-tab="librarians">
+                <span class="quick-icon purple">♧</span>
+                <strong>Quản lý thủ thư</strong>
+                <small>Quản lý tài khoản thủ thư</small>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== -->
+        <!-- QUẢN LÝ SÁCH -->
+        <!-- ===================== -->
+
+        <section id="books" class="tab-section">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Danh sách sách</h2>
+                <p>Quản lý dữ liệu sách trong thư viện</p>
+              </div>
+
+              <button type="button" class="primary-btn" id="addBookBtn">
+                + Thêm sách
+              </button>
+            </div>
+
+            <input
+              type="search"
+              id="bookSearch"
+              class="search-input"
+              placeholder="Tìm mã sách, tên sách, tác giả..."
+            />
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Mã sách</th>
+                    <th>Tên sách</th>
+                    <th>Tác giả</th>
+                    <th>Số lượng</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+
+                <tbody id="bookTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== -->
+        <!-- QUẢN LÝ ĐỘC GIẢ -->
+        <!-- ===================== -->
+
+        <section id="readers" class="tab-section">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Danh sách độc giả</h2>
+                <p>Quản lý dữ liệu độc giả trong thư viện</p>
+              </div>
+
+              <button type="button" class="primary-btn" id="addReaderBtn">
+                + Thêm độc giả
+              </button>
+            </div>
+
+            <input
+              type="search"
+              id="readerSearch"
+              class="search-input"
+              placeholder="Tìm mã, họ tên, số điện thoại..."
+            />
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Mã độc giả</th>
+                    <th>Họ và tên</th>
+                    <th>Số điện thoại</th>
+                    <th>Giới tính</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+
+                <tbody id="readerTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== -->
+        <!-- QUẢN LÝ THỦ THƯ -->
+        <!-- ===================== -->
+
+        <section id="librarians" class="tab-section">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Danh sách thủ thư</h2>
+                <p>Quản lý tài khoản nhân viên thư viện</p>
+              </div>
+
+              <button type="button" class="primary-btn" id="addLibrarianBtn">
+                + Thêm thủ thư
+              </button>
+            </div>
+
+            <input
+              type="search"
+              id="librarianSearch"
+              class="search-input"
+              placeholder="Tìm tên đăng nhập hoặc email..."
+            />
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>ID</th>
+                    <th>Tên đăng nhập</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+
+                <tbody id="librarianTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL THÊM / SỬA SÁCH -->
+    <!-- ========================= -->
+
+    <div class="modal-backdrop" id="bookModal">
+      <div
+        class="modal"
+        style="max-width: 650px; max-height: 90vh; overflow-y: auto"
+      >
+        <div class="modal-header">
+          <h2 id="bookModalTitle">Thêm sách</h2>
+
+          <button type="button" id="closeBookModalBtn">✕</button>
+        </div>
+
+        <form id="bookForm">
+          <label for="bookIdInput">Mã sách *</label>
+          <input id="bookIdInput" required />
+
+          <label for="bookTitleInput">Tên sách *</label>
+          <input id="bookTitleInput" required />
+
+          <label for="bookAuthorInput">Tác giả</label>
+          <input id="bookAuthorInput" />
+
+          <label for="bookPublisherInput">Nhà xuất bản</label>
+          <input id="bookPublisherInput" />
+
+          <label for="bookYearInput">Năm xuất bản</label>
+          <input id="bookYearInput" type="number" min="0" />
+
+          <label for="bookCategoryInput">Thể loại</label>
+          <input id="bookCategoryInput" />
+
+          <label for="bookPriceInput">Giá sách</label>
+          <input id="bookPriceInput" type="number" min="0" step="0.01" />
+
+          <label for="bookQuantityInput">Số lượng *</label>
+          <input
+            id="bookQuantityInput"
+            type="number"
+            min="0"
+            step="1"
+            required
+          />
+
+          <div class="modal-actions">
+            <button type="button" class="secondary-btn" id="cancelBookModalBtn">
+              Hủy
+            </button>
+
+            <button type="submit" class="primary-btn" id="saveBookBtn">
+              Lưu sách
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL THÊM / SỬA ĐỘC GIẢ -->
+    <!-- ========================= -->
+
+    <div class="modal-backdrop" id="readerModal">
+      <div
+        class="modal"
+        style="max-width: 600px; max-height: 90vh; overflow-y: auto"
+      >
+        <div class="modal-header">
+          <h2 id="readerModalTitle">Thêm độc giả</h2>
+
+          <button type="button" id="closeReaderModalBtn">✕</button>
+        </div>
+
+        <form id="readerForm">
+          <label for="readerIdInput">Mã độc giả *</label>
+          <input id="readerIdInput" required />
+
+          <label for="readerNameInput">Họ và tên *</label>
+          <input id="readerNameInput" required />
+
+          <label for="readerDobInput">Ngày sinh</label>
+          <input id="readerDobInput" type="date" />
+
+          <label for="readerGenderInput">Giới tính</label>
+          <select id="readerGenderInput">
+            <option value="">-- Chọn giới tính --</option>
+            <option value="MALE">Nam</option>
+            <option value="FEMALE">Nữ</option>
+            <option value="OTHER">Khác</option>
+          </select>
+
+          <label for="readerPhoneInput">Số điện thoại</label>
+          <input id="readerPhoneInput" type="tel" inputmode="tel" />
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="secondary-btn"
+              id="cancelReaderModalBtn"
+            >
+              Hủy
+            </button>
+
+            <button type="submit" class="primary-btn" id="saveReaderBtn">
+              Lưu độc giả
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL THÊM / SỬA THỦ THƯ -->
+    <!-- ========================= -->
+
+    <div class="modal-backdrop" id="librarianModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="modalTitle">Thêm tài khoản thủ thư</h2>
+
+          <button type="button" id="closeModalBtn">✕</button>
+        </div>
+
+        <form id="librarianForm">
+          <label for="newUsername">Tên đăng nhập *</label>
+          <input id="newUsername" required maxlength="50" />
+
+          <label for="newEmail">Email *</label>
+          <input id="newEmail" type="email" required />
+
+          <label for="newPassword">Mật khẩu</label>
+          <input id="newPassword" type="password" autocomplete="new-password" />
+
+          <div class="modal-actions">
+            <button type="button" class="secondary-btn" id="cancelModalBtn">
+              Hủy
+            </button>
+
+            <button type="submit" class="primary-btn" id="saveLibrarianBtn">
+              Lưu tài khoản
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
